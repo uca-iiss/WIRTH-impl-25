@@ -37,7 +37,7 @@ Tras esta breve explicación de ciertos conceptos claves del funcionamiento de l
 
 ## Código de Ejemplo
 A continuación, se muestra un ejemplo de cómo se pueden utilizar la herencia en Python:
-[**herencia.py**](herencia.py)
+[**herencia.py**](./herencia.py)
 
 ```python
 # Clase base
@@ -202,7 +202,7 @@ Ahora vamos a explicar los métodos que se han usado en el ejemplo:
 A continuacion mostraremos como hemos comprobado el funcionamiento del código
 
 ## Código de test
-[**test.py**](test.py)
+[**test.py**](./test.py)
 
 ```python
 
@@ -291,27 +291,54 @@ if __name__ == '__main__':
 
 ```
 
+### `test_instancias`: 
+Esta prueba se asegura de que las instancias creadas de diferentes clases (Disenador, Desarrollador, Fullstack, etc.) pertenezcan a las clases correctas y a sus superclases:
+
+- Usa `assertIsInstance(obj, Clase)` para verificar que el objeto pertenece a una clase dada o a alguna clase base de ella.
+
+- Verifica, por ejemplo, que un `Fullstack` sea también un `Desarrollador`, `Disenador` y `Trabajador`, lo cual sugiere herencia múltiple.
+
+Esto comprueba que la jerarquía de herencia se ha definido correctamente.
+
+### `test_herencia`: 
+Aquí se verifica que las subclases heredan de las clases correctas, utilizando `issubclass(SubClase, SuperClase)`:
+
+- Se comprueba que `Disenador`, `Desarrollador` y `EspecialistaDeAccesibilidad` heredan de `Trabajador`.
+
+- También se verifica que `Fullstack` hereda tanto de `Desarrollador` como de `Disenador`, y que `UXEngineer` hereda de `Disenador` y `EspecialistaDeAccesibilidad`.
+
+Esto asegura la estructura correcta del árbol de herencia.
+
+### `test_trabajar`: 
+Esta prueba evalúa el método sobrescrito `trabajar()` en diferentes clases:
+
+- Cada clase tiene su propia implementación personalizada del método `trabajar`.
+
+- Usa `assertEqual()` o `assertIn()` para confirmar que el método devuelve la cadena esperada.
+
+
+### `test_salario_anual`: 
+Aquí se comprueba que el método `calcular_salario_anual()` funciona correctamente:
+
+- Este método calcula el salario base más una bonificación que varía según el tipo de trabajador.
+
+Cada assertEqual verifica que el salario calculado sea correcto de acuerdo con las reglas específicas de la subclase.
+
+### `test_metodos_propios`: 
+Esta prueba verifica que cada subclase tiene métodos únicos adicionales además de los heredados:
+
+- `Disenador` tiene `crear_prototipo`
+- `Desarrollador` tiene `escribir_codigo`
+- `EspecialistaDeAccesibilidad` tiene `auditar_interfaz`
+- `Fullstack` tiene `gestionar_proyecto_completo`
+- `UXEngineer` tiene `realizar_pruebas_usabilidad`
+
+Cada uno de estos métodos representa una habilidad especializada de ese tipo de trabajador, y se asegura que al ser llamados devuelven el mensaje correcto.
+
 ## Ejecución Test
-Para ejecutar el código y pasar los test de dicho código, realiza los siguientes pasos detallados que incluyen la instalacion de python, la creación de un Jenkinsfile, creación pipeline y ejecución del pipeline
+Para ejecutar el código y pasar los test de dicho código, realiza los siguientes pasos detallados que incluye la creación de un Jenkinsfile, creación pipeline y ejecución del pipeline
 
-### 1. Instalación de Python
-Primero, necesitas asegurarte de que Python está instalado en tu sistema.
-Puedes descargar e instalar Python desde:
-(https://www.python.org/downloads/)
-Sigue las instrucciones específicas para tu sistema operativo.
-
-Verifica la instalación ejecutando:
-
-```bash
-python --version
-```
-o
-```bash
-python3 --version
-```
-Esto debería mostrar la versión de Python instalada.
-
-### 2. Creación Jenkinsfile
+### 1. Creación Jenkinsfile
 A continuación, hemos creado el Jenkinsfile necesario para realizar el pipeline, este se encuentra en la carpeta con el resto de código
 
 ```Jenkinsfile
@@ -341,7 +368,7 @@ pipeline {
 }
 ```
 
-### 3. Crear Pipeline
+### 2. Crear Pipeline
 Una vez realizados los pasos anteriores, abrimos Jenkins y creamos un nuevo Pipeline. Para ello: 
 
  - Lo definimos como `Pipeline script from SCM` y como SCM seleccionamos `Git`.
@@ -351,6 +378,6 @@ Una vez realizados los pasos anteriores, abrimos Jenkins y creamos un nuevo Pipe
 
 Y con esta configuración hemos creado el pipeline necesario para la ejecución de los test
 
-### 4. Ejecutar los Tests
+### 3. Ejecutar los Tests
 Una vez creado el pipeline, ejecutamos dando a `Construir ahora` y el propion Jenkins pasará los test automaticamente.
 
