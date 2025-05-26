@@ -144,6 +144,59 @@ class PaymentMethodSpec extends AnyFunSuite {
   }
 }
 ```
+
+### Código Jenkinsfile
+
+```jenkinsfile
+pipeline {
+    agent {
+        docker {
+            image 'sbtscala/scala-sbt:eclipse-temurin-11.0.14.1_1.6.2_2.13.8'
+            args '-v /root/.ivy2:/root/.ivy2' // Cache de dependencias
+        }
+    }
+
+    environment {
+        PROJECT_DIR = "temas/abstraccion/scala/abstraccion-pagos"
+    }
+
+    stages {
+        stage('Limpiar') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'sbt clean'
+                }
+            }
+        }
+
+        stage('Compilar') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'sbt compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'sbt test'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build finalizado correctamente.'
+        }
+        failure {
+            echo 'Ha fallado alguna etapa del build.'
+        }
+    }
+}
+```
+
 ## Anotaciones - C#
 
 ### Conceptos Previos
@@ -369,6 +422,85 @@ namespace EmpresaTests
     }
 }
 ```
+
+### Código Jenkinsfile
+
+```jenkinsfile
+pipeline {
+    agent {
+        docker {
+            image 'mcr.microsoft.com/dotnet/sdk:6.0'
+            args '-u root:root'
+        }
+    }
+
+    environment {
+        DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE = '1'
+        PATH = "${env.HOME}/.dotnet/tools:${env.PATH}" // Asegura que las herramientas globales estén accesibles
+    }
+
+    options {
+        timestamps()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Clonando el repositorio...'
+                checkout scm
+            }
+        }
+
+        stage('Restaurar dependencias') {
+            steps {
+                sh 'dotnet restore temas/anotaciones/csharp/anotaciones_csharp/main.csproj'
+                sh 'dotnet restore temas/anotaciones/csharp/test_csharp/test.csproj'
+            }
+        }
+
+        stage('Compilar') {
+            steps {
+                sh 'dotnet build temas/anotaciones/csharp/anotaciones_csharp/main.csproj --configuration Release'
+                sh 'dotnet build temas/anotaciones/csharp/test_csharp/test.csproj --configuration Release'
+            }
+        }
+
+        stage('Ejecutar Tests') {
+            steps {
+                sh 'dotnet test temas/anotaciones/csharp/test_csharp/test.csproj --logger trx;LogFileName=test_results.trx'
+            }
+        }
+
+        stage('Convertir TRX a JUnit XML') {
+            steps {
+                // Instala trx2junit si no está disponible
+                sh 'dotnet tool install -g trx2junit || true'
+
+                sh '/root/.dotnet/tools/trx2junit temas/anotaciones/csharp/test_csharp/TestResults/*.trx'
+
+            }
+        }
+
+        stage('Publicar resultados de test') {
+            steps {
+                junit 'temas/anotaciones/csharp/test_csharp/TestResults/*.xml'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline finalizada con éxito.'
+        }
+
+        failure {
+            echo 'La compilación o pruebas fallaron.'
+        }
+    }
+}
+```
+
 ## Lambdas - Python
 
 ### Conceptos Previos
@@ -453,4 +585,37 @@ class TestLambdas(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+```
+
+### Código Jenkinsfile
+
+```jenkinsfile
+pipeline {
+    agent {
+        docker {
+            image 'python:3.9' 
+        }
+    }
+
+    stages {
+        stage('Preparar entorno') {
+            steps {
+                sh 'python3 -m venv venv'
+                sh './venv/bin/pip install --upgrade pip'
+            }
+        }
+
+        stage('Ejecutar pruebas') {
+            steps {
+                sh './venv/bin/python temas/lambdas/python/test.py'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finalizado.'
+        }
+    }
+}
 ```
