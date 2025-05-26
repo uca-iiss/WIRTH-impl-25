@@ -18,7 +18,7 @@ Cada sección incluye ejemplos de código comentado y explicaciones breves, con 
 #### ¿Qué es la abstracción?
 La **abstracción** consiste en definir estructuras generales que ocultan detalles de implementación y permiten trabajar con ideas más conceptuales. En programación orientada a objetos, esto se traduce en clases abstractas o interfaces.
 
-#### Conceptos clave en Scala:
+#### Conceptos clave en Abstracción:
 - **Abstract class**: con `abstract` declara que la clase asociada no puede instanciarse directamente. En nuestro caso la clase `PaymentMethod`define un contrato común para todos los métodos de pago y delega los detalles de pay y balance a las subclases, ocultando el cómo se hace el pago (aquí la idea de la abstracción).
 
 - **Sealed trait**: un `trait` es como una interfaz con posible implementacion. Al usar sealed estamo cerradon la jerarquía de subtipos al archivo, favoreciendo el control del diseño. Esto nos proporciona una mejor seguridad y mantenibilidad del diseño, evitando que otros componentes definan estados no contemplados.  En nuestro caso el archivo `Common.scala` muestra este concepto. 
@@ -204,7 +204,7 @@ pipeline {
 #### ¿Qué son las anotaciones?
 En C#, las **anotaciones** se llaman atributos, y son metadatos que se agregan al código usando corchetes ([ ]). Estos modifican o describen cómo se comportan clases, propiedades, métodos, etc.
 
-#### Conceptos clave en Scala:
+#### Conceptos clave en Anotaciones:
 - **Definición y Uso de Atributos**: Los atributos en C# se definen como clases que heredan del tipo `System.Attribute`. Estas clases pueden contener propiedades, campos y constructores que permiten configurar su comportamiento y datos asociados. Además, utilizando el atributo `AttributeUsage`, se puede indicar a qué elementos del código se puede aplicar el atributo (por ejemplo, clases, métodos, propiedades, etc.), y si es posible aplicar múltiples instancias del mismo atributo en un solo elemento. Esta configuración proporciona flexibilidad a la hora de utilizar atributos personalizados de forma controlada y estructurada.
 
 - **Aplicación de Atributos**:Los atributos se aplican escribiéndolos entre corchetes `[ ]` justo antes del elemento del código al que se refieren. Esto puede incluir clases, métodos, propiedades, campos, parámetros, ensamblados y más. Al aplicar un atributo, es posible pasarle argumentos definidos en su constructor, así como establecer valores para sus propiedades públicas. Esto hace que los atributos sean altamente configurables y útiles para describir el propósito o comportamiento esperado de los elementos del programa.
@@ -508,7 +508,7 @@ pipeline {
 #### ¿Qué es una función lambda?
 Una **lambda** en Python es una función anónima y breve, definida con la palabra clave `lambda`. Son muy usadas en programación funcional, especialmente con funciones como `map`, `filter` y `reduce`.
 
-#### Conceptos clave en Scala:
+#### Conceptos clave en Lambdas:
 - **Funciones Lambda para Operaciones Simples**:Las funciones lambda se emplean comúnmente para realizar operaciones sencillas, como sumar dos valores. Son una forma compacta de escribir funciones que solo requieren una línea de código.
 
 - **Uso de Lambda con `map()`**: La función `map()` aplica una función a cada elemento de un iterable y devuelve un nuevo iterable. Usar funciones lambda con `map()` permite aplicar operaciones complejas de manera concisa sin necesidad de definir una nueva función.
